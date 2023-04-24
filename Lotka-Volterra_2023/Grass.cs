@@ -11,7 +11,16 @@ namespace Lotka_Volterra_2023
         private protected static Random random = new Random();
         int _x = -999;
         int _y = -999;
+
+        internal int X { get { return _x; } }
+        internal int Y { get { return _y; } }
+
         internal char Ico { get { return '@'; } set => value = '@'; }
+
+        internal Grass(char[,] field)
+        {
+            Spawn(field);
+        }
 
         public void Spawn(char[,] field)
         {

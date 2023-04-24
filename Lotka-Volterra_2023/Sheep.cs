@@ -14,5 +14,9 @@ namespace Lotka_Volterra_2023
         {
 
         }
+        internal Sheep(char[,] field, (int x, int y) coords) : base(field, coords)
+        {
+
+        }
     }
 }

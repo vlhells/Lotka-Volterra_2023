@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Lotka_Volterra_2023
 {
-    internal abstract class Animal : ISpawnable
+    internal abstract class Animal : ISpawnable, IEating
     {
         private protected static Random random = new Random();
         int _x = 999;
@@ -19,6 +20,11 @@ namespace Lotka_Volterra_2023
             Spawn(field);
         }
 
+        internal Animal(char[,] field, (int x, int y) coords)
+        {
+            Spawn(field, coords);
+        }
+
         public void Spawn(char[,] field)
         {
             do
@@ -29,6 +35,18 @@ namespace Lotka_Volterra_2023
             while (field[_x, _y] != '.');
 
             field[_x, _y] = Ico;
+        }
+
+        public void Spawn(char[,] field, (int x, int y) coords)
+        {
+            do
+            {
+                _x = random.Next(coords.x - 1, coords.x + 2);
+                _y = random.Next(coords.y - 1, coords.y + 2);
+            }
+            while (!(_x > 0 && _y > 0 && _x < field.GetLength(0) && _y < field.GetLength(1) && field[_x, _y] == '.'));
+
+            field[_x, _y] = field[coords.x, coords.y];
         }
 
         private (int, int) GenerateNewCoords(char[,] field)
@@ -66,7 +84,7 @@ namespace Lotka_Volterra_2023
             {
                 for (int j = coords.y - 1; j < coords.y + 1; j++)
                 {
-                    if (!(i > 0 && j > 0 && i < field.GetLength(0) && j < field.GetLength(1)))
+                    if (!(i > 0 && j > 0 && i < field.GetLength(0) && j < field.GetLength(1) && field[i, j] == '.'))
                     {
                         if (i == coords.x && j == coords.y)
                             return false;
@@ -95,27 +113,36 @@ namespace Lotka_Volterra_2023
             field[_x, _y] = Ico;
         }
 
-        internal void Eat(char[,] field, List<Wolf> eater, List<Sheep> eaten)
-        {
-            foreach (Wolf w in eater)
-            {
-                for (int i = w._x - 1; i < w._x + 1; i++)
-                {
-                    for (int j = w._y - 1; j < w._y + 1; j++)
-                    {
-                        if (!(i > 0 && j > 0 && i < field.GetLength(0) && j < field.GetLength(1)))
-                        {
-                            if (i == w._x && j == w._y)
-                                continue;
+        //internal bool HaveToEat(char[,] field, List<Wolf> eater, List<Sheep> eaten)
+        //{
 
-                            if (field[i, j] == 'S')
+        //}
+
+
+        public (int x, int y) Eat(char[,] field, List<Animal> Animals)
+        {
+            foreach (Animal a in Animals)
+            {
+                for (int i = a._x - 1; i <= a._x + 1; i++)
+                {
+                    for (int j = a._y - 1; j <= a._y + 1; j++)
+                    {
+                        if (i == a._x && j == a._y)
+                            continue;
+
+                        if (i >= 0 && j >= 0 && i < field.GetLength(0) && j < field.GetLength(1))
+                        {
+                            //field[i, j] = 'X';
+
+                            if (a.Ico == 'W' && field[i, j] == 'S')
                             {
-                                for (int s = 0; s < eaten.Count; s++)
+                                for (int s = 0; s < Animals.Count; s++)
                                 {
-                                    if (eaten[s]._x == i && eaten[s]._y == j)
+                                    if (Animals[s]._x == i && Animals[s]._y == j)
                                     {
+                                        Animals.RemoveAt(s);
                                         field[i, j] = '.';
-                                        eaten.RemoveAt(s);
+                                        return (a._x, a._y);
                                     }
                                 }
                             }
@@ -124,8 +151,42 @@ namespace Lotka_Volterra_2023
                     }
                 }
             }
+            return (-1000, -1000);
+        }
 
-            
+        public (int x, int y) Eat(char[,] field, List<Animal> Animals, List<Grass> grass)
+        {
+            foreach (Animal a in Animals)
+            {
+                for (int i = a._x - 1; i <= a._x + 1; i++)
+                {
+                    for (int j = a._y - 1; j <= a._y + 1; j++)
+                    {
+                        if (i == a._x && j == a._y)
+                            continue;
+
+                        if (i >= 0 && j >= 0 && i < field.GetLength(0) && j < field.GetLength(1))
+                        {
+                            //field[i, j] = 'X';
+
+                            if (a.Ico == 'S' && field[i, j] == '@')
+                            {
+                                for (int s = 0; s < grass.Count; s++)
+                                {
+                                    if (grass[s].X == i && grass[s].Y == j)
+                                    {
+                                        grass.RemoveAt(s);
+                                        field[i, j] = '.';
+                                        return (a._x, a._y);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            return (-1000, -1000);
         }
     }
 }

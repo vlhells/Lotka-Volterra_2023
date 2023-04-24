@@ -14,5 +14,11 @@ namespace Lotka_Volterra_2023
         {
 
         }
+
+        internal Wolf(char[,] field, (int x, int y) coords) : base(field, coords)
+        {
+
+        }
+
     }
 }

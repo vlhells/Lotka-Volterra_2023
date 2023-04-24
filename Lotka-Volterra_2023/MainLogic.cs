@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,8 +11,10 @@ namespace Lotka_Volterra_2023
 {
     internal class MainLogic
     {
-        static List<Sheep> Sheep = new List<Sheep>();
-        static List<Wolf> Wolves = new List<Wolf>();
+        //static List<Sheep> Sheep = new List<Sheep>();
+        //static List<Wolf> Wolves = new List<Wolf>();
+        static List<Animal> Animals = new List<Animal>();
+        static List<Grass> grass = new List<Grass>();
 
         static int i = 0;
 
@@ -20,30 +24,67 @@ namespace Lotka_Volterra_2023
 
             if (i == 0)
             {
-                int wolves_count = (int)(0.025f * field.Length);
+                int wolves_count = (int)(0.015f * field.Length);
                 int sheep_count = (int)(0.05f * field.Length);
+                int grass_count = (int)(0.035f * field.Length);
 
                 for (int w = 0; w <= wolves_count; w++) // Спавн на поле волков на 0 ходе.
                 {
-                    Wolves.Add(new Wolf(field));
+                    //Wolves.Add(new Wolf(field));
+                    Animals.Add(new Wolf(field));
                 }
-
                 for (int s = 0; s <= sheep_count; s++)
                 {
-                    Sheep.Add(new Sheep(field));
+                    Animals.Add(new Sheep(field));
                 }
+                for (int g = 0; g <= grass_count; g++)
+                {
+                    grass.Add(new Grass(field));
+                }
+
 
                 i++;
             }
 
-            foreach (var s in Sheep) // Движение всех овец.
+            if (i == 1)
             {
-                s.Move(field);
-            }
+                //foreach (var w in Wolves) // Движение всех волков.
+                //{
+                //    //w.Eat(field, Wolves, Sheep);
+                //    w.Move(field);
 
-            foreach (var w in Wolves) // Движение всех волков.
-            {
-                w.Move(field);
+                //}
+
+                //foreach (var s in Sheep) // Движение всех овец.
+                //{
+                //    s.Move(field);
+                //}
+
+                (int x, int y) wellfed = (1200, 1200);
+                for (int a = 0; a < Animals.Count; a++)
+                {
+                    Animals[a].Move(field);
+                    switch (Animals[a])
+                    {
+                        case Wolf:
+                            wellfed = Animals[a].Eat(field, Animals);
+                            if (wellfed != (-1000, -1000))
+                            {
+                                Animals.Add(new Wolf(field, wellfed));
+                            }
+                            break;
+
+                        case Sheep:
+                            wellfed = Animals[a].Eat(field, Animals, grass);
+                            if (wellfed != (-1000, -1000))
+                            {
+                                Animals.Add(new Sheep(field, wellfed));
+                            }
+                            break;
+
+                    }
+                    wellfed = (1200, 1200);
+                }
             }
 
 
@@ -74,7 +115,7 @@ namespace Lotka_Volterra_2023
 
             if (sheep_count == 0)
             {
-                return true;
+                //return true;
             }
             return false;
         }

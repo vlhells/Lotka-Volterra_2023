@@ -14,13 +14,13 @@
             do // Основной цикл отрисовки:
             {
                 field = MainLogic.Cycle(field);
-                if (field != null)
+                if (field != null) ;
                     Draw(field);
             }
             while (field != null);
         }
 
-        private static void Draw(char[,] field) // Вывод поля на консоль.
+        public static void Draw(char[,] field) // Вывод поля на консоль.
         {
             Thread.Sleep(750);
             Console.Clear();
