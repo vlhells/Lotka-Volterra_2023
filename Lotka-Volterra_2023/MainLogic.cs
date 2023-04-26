@@ -11,18 +11,16 @@ namespace Lotka_Volterra_2023
 {
     internal class MainLogic
     {
-        //static List<Sheep> Sheep = new List<Sheep>();
-        //static List<Wolf> Wolves = new List<Wolf>();
         static List<Animal> Animals = new List<Animal>();
         static List<Grass> grass = new List<Grass>();
 
         static int i = 0;
 
-        internal static char[,]? Cycle(char[,] field)
+        internal static char[,]? Cycle(char[,] field) // Ввести вывод числа овец, волков и травы. Проверить инкапсуляцию public, private, etc. + Рефакторинг по желанию.
         {
             bool game_over = false;
 
-            if (i == 0)
+            if (i == 0) // Спавн на 0 раунде.
             {
                 int wolves_count = (int)(0.015f * field.Length);
                 int sheep_count = (int)(0.05f * field.Length);
@@ -30,7 +28,6 @@ namespace Lotka_Volterra_2023
 
                 for (int w = 0; w <= wolves_count; w++) // Спавн на поле волков на 0 ходе.
                 {
-                    //Wolves.Add(new Wolf(field));
                     Animals.Add(new Wolf(field));
                 }
                 for (int s = 0; s <= sheep_count; s++)
@@ -41,33 +38,18 @@ namespace Lotka_Volterra_2023
                 {
                     grass.Add(new Grass(field));
                 }
-
-
-                i++;
             }
 
-            if (i == 1)
+            if (i >= 1)
             {
-                //foreach (var w in Wolves) // Движение всех волков.
-                //{
-                //    //w.Eat(field, Wolves, Sheep);
-                //    w.Move(field);
-
-                //}
-
-                //foreach (var s in Sheep) // Движение всех овец.
-                //{
-                //    s.Move(field);
-                //}
-
                 (int x, int y) wellfed = (1200, 1200);
-                for (int a = 0; a < Animals.Count; a++)
+                for (int a = 0; a < Animals.Count; a++) // Основной игровой цикл.
                 {
                     Animals[a].Move(field);
                     switch (Animals[a])
                     {
                         case Wolf:
-                            wellfed = Animals[a].Eat(field, Animals);
+                            Animals[a].Eat(field, Animals);
                             if (wellfed != (-1000, -1000))
                             {
                                 Animals.Add(new Wolf(field, wellfed));
@@ -85,7 +67,14 @@ namespace Lotka_Volterra_2023
                     }
                     wellfed = (1200, 1200);
                 }
+
+                foreach (Animal a in Animals)
+                {
+                    if (a.IsHungry > 0)
+                        a.IsHungry--;
+                }
             }
+
 
 
 
@@ -97,6 +86,7 @@ namespace Lotka_Volterra_2023
             game_over = CalculateSheep(field);
             if (game_over)
                 return null;
+            i++;
             return field;
         }
 

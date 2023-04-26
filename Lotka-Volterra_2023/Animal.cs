@@ -12,6 +12,13 @@ namespace Lotka_Volterra_2023
         private protected static Random random = new Random();
         int _x = 999;
         int _y = 999;
+        int _isHungry = 0; // Сколько ходов осталось до того, чтобы есть, если в окрестности кто-то есть. 0 -- ест. Больше -- не ест.
+
+        internal int X { get { return _x; } }
+
+        internal int Y { get { return _y; } }
+
+        internal int IsHungry { get { return _isHungry; } set { _isHungry = value; } }
 
         internal abstract char Ico { get; set; }
 
@@ -123,30 +130,34 @@ namespace Lotka_Volterra_2023
         {
             foreach (Animal a in Animals)
             {
-                for (int i = a._x - 1; i <= a._x + 1; i++)
+                if (a.IsHungry == 0)
                 {
-                    for (int j = a._y - 1; j <= a._y + 1; j++)
+                    for (int i = a._x - 1; i <= a._x + 1; i++)
                     {
-                        if (i == a._x && j == a._y)
-                            continue;
-
-                        if (i >= 0 && j >= 0 && i < field.GetLength(0) && j < field.GetLength(1))
+                        for (int j = a._y - 1; j <= a._y + 1; j++)
                         {
-                            //field[i, j] = 'X';
+                            if (i == a._x && j == a._y)
+                                continue;
 
-                            if (a.Ico == 'W' && field[i, j] == 'S')
+                            if (i >= 0 && j >= 0 && i < field.GetLength(0) && j < field.GetLength(1))
                             {
-                                for (int s = 0; s < Animals.Count; s++)
+                                //field[i, j] = 'X';
+
+                                if (a.Ico == 'W' && field[i, j] == 'S')
                                 {
-                                    if (Animals[s]._x == i && Animals[s]._y == j)
+                                    for (int s = 0; s < Animals.Count; s++)
                                     {
-                                        Animals.RemoveAt(s);
-                                        field[i, j] = '.';
-                                        return (a._x, a._y);
+                                        if (Animals[s]._x == i && Animals[s]._y == j)
+                                        {
+                                            Animals.RemoveAt(s);
+                                            field[i, j] = '.';
+                                            a.IsHungry = 3;
+                                            return (a._x, a._y);
+                                        }
                                     }
                                 }
-                            }
 
+                            }
                         }
                     }
                 }
@@ -158,30 +169,34 @@ namespace Lotka_Volterra_2023
         {
             foreach (Animal a in Animals)
             {
-                for (int i = a._x - 1; i <= a._x + 1; i++)
+                if (a.IsHungry == 0)
                 {
-                    for (int j = a._y - 1; j <= a._y + 1; j++)
+                    for (int i = a._x - 1; i <= a._x + 1; i++)
                     {
-                        if (i == a._x && j == a._y)
-                            continue;
-
-                        if (i >= 0 && j >= 0 && i < field.GetLength(0) && j < field.GetLength(1))
+                        for (int j = a._y - 1; j <= a._y + 1; j++)
                         {
-                            //field[i, j] = 'X';
+                            if (i == a._x && j == a._y)
+                                continue;
 
-                            if (a.Ico == 'S' && field[i, j] == '@')
+                            if (i >= 0 && j >= 0 && i < field.GetLength(0) && j < field.GetLength(1))
                             {
-                                for (int s = 0; s < grass.Count; s++)
+                                //field[i, j] = 'X';
+
+                                if (a.Ico == 'S' && field[i, j] == '@')
                                 {
-                                    if (grass[s].X == i && grass[s].Y == j)
+                                    for (int s = 0; s < grass.Count; s++)
                                     {
-                                        grass.RemoveAt(s);
-                                        field[i, j] = '.';
-                                        return (a._x, a._y);
+                                        if (grass[s].X == i && grass[s].Y == j)
+                                        {
+                                            grass.RemoveAt(s);
+                                            field[i, j] = '.';
+                                            a.IsHungry = 3;
+                                            return (a._x, a._y);
+                                        }
                                     }
                                 }
-                            }
 
+                            }
                         }
                     }
                 }
