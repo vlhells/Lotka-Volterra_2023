@@ -20,7 +20,7 @@ namespace Lotka_Volterra_2023
 
         internal int IsHungry { get { return _isHungry; } set { _isHungry = value; } }
 
-        internal abstract char Ico { get; set; }
+        private protected abstract char Ico { get; }
 
         internal Animal(char[,] field)
         {
@@ -51,7 +51,7 @@ namespace Lotka_Volterra_2023
                 _x = random.Next(coords.x - 1, coords.x + 2);
                 _y = random.Next(coords.y - 1, coords.y + 2);
             }
-            while (!(_x > 0 && _y > 0 && _x < field.GetLength(0) && _y < field.GetLength(1) && field[_x, _y] == '.'));
+            while (!(_x > 0 && _y > 0 && _x < field.GetLength(0) && _y < field.GetLength(1) && field[_x, _y] == '.')); // Тут был беск. цикл)))
 
             field[_x, _y] = field[coords.x, coords.y];
         }

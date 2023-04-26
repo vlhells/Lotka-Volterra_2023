@@ -8,7 +8,7 @@ namespace Lotka_Volterra_2023
 {
     internal class Sheep : Animal
     {
-        internal override char Ico { get { return 'S'; } set => value = 'S'; }
+        private protected override char Ico { get { return 'S'; } }
 
         internal Sheep(char[,] field) : base(field)
         {

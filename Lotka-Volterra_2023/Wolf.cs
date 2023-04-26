@@ -8,7 +8,7 @@ namespace Lotka_Volterra_2023
 {
     internal class Wolf : Animal
     {
-        internal override char Ico { get { return 'W'; } set => value = 'W'; }
+        private protected override char Ico { get { return 'W'; } }
 
         internal Wolf(char[,] field) : base(field)
         {

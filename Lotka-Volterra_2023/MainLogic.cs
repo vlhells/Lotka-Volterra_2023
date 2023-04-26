@@ -16,7 +16,7 @@ namespace Lotka_Volterra_2023
 
         static int i = 0;
 
-        internal static char[,]? Cycle(char[,] field) // Ввести вывод числа овец, волков и травы. Проверить инкапсуляцию public, private, etc. + Рефакторинг по желанию.
+        internal static char[,]? Cycle(char[,] field) // Ввести вывод числа овец, волков и травы.
         {
             bool game_over = false;
 
@@ -49,7 +49,7 @@ namespace Lotka_Volterra_2023
                     switch (Animals[a])
                     {
                         case Wolf:
-                            Animals[a].Eat(field, Animals);
+                            wellfed = Animals[a].Eat(field, Animals);
                             if (wellfed != (-1000, -1000))
                             {
                                 Animals.Add(new Wolf(field, wellfed));

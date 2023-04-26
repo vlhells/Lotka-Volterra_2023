@@ -10,6 +10,6 @@ namespace Lotka_Volterra_2023
     {
         public (int x, int y) Eat(char[,] field, List<Animal> Animals);
 
-        public (int x, int y) Eat(char[,] field, List<Animal> Animals, List<Grass> Grass);
+        public (int x, int y) Eat(char[,] field, List<Animal> Animals, List<Grass> grass);
     }
 }

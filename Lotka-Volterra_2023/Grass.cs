@@ -15,7 +15,7 @@ namespace Lotka_Volterra_2023
         internal int X { get { return _x; } }
         internal int Y { get { return _y; } }
 
-        internal char Ico { get { return '@'; } set => value = '@'; }
+        internal char Ico { get { return '@'; } }
 
         internal Grass(char[,] field)
         {
