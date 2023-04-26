@@ -13,6 +13,7 @@ namespace Lotka_Volterra_2023
         int _x = 999;
         int _y = 999;
         int _isHungry = 0; // Сколько ходов осталось до того, чтобы есть, если в окрестности кто-то есть. 0 -- ест. Больше -- не ест.
+        double _probabilityOfSuccesfulEat = 0.5;
 
         internal int X { get { return _x; } }
 
@@ -147,7 +148,7 @@ namespace Lotka_Volterra_2023
                                 {
                                     for (int s = 0; s < Animals.Count; s++)
                                     {
-                                        if (Animals[s]._x == i && Animals[s]._y == j)
+                                        if (Animals[s]._x == i && Animals[s]._y == j && random.NextDouble() <= _probabilityOfSuccesfulEat)
                                         {
                                             Animals.RemoveAt(s);
                                             field[i, j] = '.';
@@ -186,7 +187,7 @@ namespace Lotka_Volterra_2023
                                 {
                                     for (int s = 0; s < grass.Count; s++)
                                     {
-                                        if (grass[s].X == i && grass[s].Y == j)
+                                        if (grass[s].X == i && grass[s].Y == j && random.NextDouble() <= _probabilityOfSuccesfulEat)
                                         {
                                             grass.RemoveAt(s);
                                             field[i, j] = '.';
