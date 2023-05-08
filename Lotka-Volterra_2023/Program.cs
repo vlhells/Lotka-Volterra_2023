@@ -16,7 +16,7 @@
                 field = MainLogic.Cycle(field);
                 if (field != null)
                 {
-                    CalculateAnimals(field, out (int s, int w, int g) counts);
+                    CalculateObjectsOnField(field, out (int s, int w, int g) counts);
                     Draw(field, counts);
                 }
             }
@@ -51,7 +51,7 @@
             Console.Write($"Овец: {counts.s}\nВолков:{counts.w}\nТравы:{counts.g}");
         }
 
-        private static void CalculateAnimals(char[,] field, out (int s, int w, int g) counts)
+        private static void CalculateObjectsOnField(char[,] field, out (int s, int w, int g) counts)
         {
             counts = (0, 0, 0);
 

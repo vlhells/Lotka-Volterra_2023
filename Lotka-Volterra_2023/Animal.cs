@@ -57,7 +57,7 @@ namespace Lotka_Volterra_2023
             field[_x, _y] = field[coords.x, coords.y];
         }
 
-        private (int, int) GenerateNewCoords(char[,] field)
+        private (int, int) GenerateNewCoords()
         {
             int x = _x;
             int y = _y;
@@ -111,7 +111,7 @@ namespace Lotka_Volterra_2023
 
             do
             {
-                coords = GenerateNewCoords(field);
+                coords = GenerateNewCoords();
             }
             while (!CheckNewCoords(field, coords));
 
